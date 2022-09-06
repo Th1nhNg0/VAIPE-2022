@@ -18,8 +18,8 @@ RUN pip3 install -r requirements.txt
 
 # download pretrained model
 RUN mkdir -p /app/models
-RUN gdown https://drive.google.com/file/d/1-slos4_7v9bMOYFEs40HKJFJ4GI8BfzJ/view?usp=sharing -O /app/models/yolo.pt
-RUN gdown https://drive.google.com/file/d/1-U253UBmypqAZDRJZ2fgC3hQE0-ZBSAJ/view?usp=sharing -O /app/models/resnet50.h5
+RUN gdown https://drive.google.com/file/d/1-slos4_7v9bMOYFEs40HKJFJ4GI8BfzJ/view?usp=sharing --fuzzy -O /app/models/yolo.pt
+RUN gdown https://drive.google.com/file/d/1-U253UBmypqAZDRJZ2fgC3hQE0-ZBSAJ/view?usp=sharing --fuzzy -O /app/models/resnet50.h5
 
 # download yolov5
 RUN git clone https://github.com/ultralytics/yolov5
