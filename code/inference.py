@@ -84,18 +84,18 @@ def classification(img_path:str,ids)->pd.DataFrame:
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Inference')
-    parser.add_argument('yolov5_path', type=str, help='path to yolov5 model', required=True,default='/app/models/yolo.pt')
-    parser.add_argument('classification_path', type=str, help='path to classification model', required=True,default='/app/models/resnet50.h5')
+    parser.add_argument('--yolo_model', type=str, help='path to yolov5 model',nargs='?', const='/app/models/yolo.pt',default='/app/models/yolo.pt')
+    parser.add_argument('--class_model', type=str, help='path to classification model',nargs='?', const='/app/models/resnet50.h5',default='/app/models/resnet50.h5')
     
     args = parser.parse_args()
-    yolov5_path = args.yolov5_path
-    classification_path = args.classification_path
+    yolo_model_path = args.yolo_model
+    class_model_path = args.class_model
 
 
     pres_df = pd.read_csv('/app/pres_df.csv')
-    yolo_model = torch.hub.load('ultralytics/yolov5','custom',path=yolov5_path)
+    yolo_model = torch.hub.load('ultralytics/yolov5','custom',path=yolo_model_path)
     print("✅ LOADING YOLO MODEL DONE")
-    class_model = tf.keras.models.load_model(classification_path)
+    class_model = tf.keras.models.load_model(class_model_path)
     print("✅ LOADING CLASSIFICATION MODEL DONE")
 
     path = '/app/public_test/pill_pres_map.json'
