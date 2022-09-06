@@ -84,8 +84,8 @@ def classification(img_path:str,ids)->pd.DataFrame:
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Inference')
-    parser.add_argument('yolov5_path', type=str, help='path to yolov5 model', required=True,default='/app/models/yolo_5x_bb_best.pt')
-    parser.add_argument('classification_path', type=str, help='path to classification model', required=True,default='/app/models/class_resnet50-new_yolo-20220829-164052.h5')
+    parser.add_argument('yolov5_path', type=str, help='path to yolov5 model', required=True,default='/app/models/yolo.pt')
+    parser.add_argument('classification_path', type=str, help='path to classification model', required=True,default='/app/models/resnet50.h5')
     
     args = parser.parse_args()
     yolov5_path = args.yolov5_path

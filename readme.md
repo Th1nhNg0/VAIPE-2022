@@ -2,11 +2,11 @@
 
 Sử dụng [**tesseract-ocr**](https://github.com/tesseract-ocr/tesseract) để lấy chữ từ ảnh pres
 
-Sử dụng [**yolov5**](https://github.com/ultralytics/yolov5) cho object detection. Pretrained model [yolo_5x_bb_best.pt](models/yolo_5x_bb_best.pt)
-
-Sử dụng [**resnet50**](https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50) cho classification. Pretrained model [class_resnet50-new_yolo-20220829-164052.h5](models/class_resnet50-new_yolo-20220829-164052.h5)
-
 Sử dụng [**U-2-Net**](https://github.com/xuebinqin/U-2-Net) để preprocess ảnh pill cho object detection
+
+Sử dụng [**yolov5**](https://github.com/ultralytics/yolov5) cho object detection. Pretrained model [yolo_5x_bb_best.pt](https://drive.google.com/file/d/1-slos4_7v9bMOYFEs40HKJFJ4GI8BfzJ/view?usp=sharing)
+
+Sử dụng [**resnet50**](https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50) cho classification. Pretrained model [class_resnet50-new_yolo-20220829-164052.h5](https://drive.google.com/file/d/1-U253UBmypqAZDRJZ2fgC3hQE0-ZBSAJ/view?usp=sharing)
 
 # Câu lệnh tạo docker image:
 
