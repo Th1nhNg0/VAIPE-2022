@@ -26,6 +26,28 @@ Trong đó `{path_to_public_test}` là đường dẫn tới public test. Thêm 
 $ docker run -d -it --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test ai4vn:latest
 ```
 
+Cấu trúc thư mục sau khi chạy container thành công:
+
+```console
+.
+|-- code
+|   |-- create_press_df.py
+|   `-- inference.py
+|-- models
+|   |-- resnet50.h5
+|   `-- yolo.pt
+|-- pres_df.csv
+|-- requirements.txt
+|-- tessdata
+|   `-- eng.traineddata
+|-- public_test
+|   |-- pill
+|   |   `-- image/
+|   `-- prescription
+|       `-- image/
+`-- yolov5/
+```
+
 ### Run inference:
 
 ```console
