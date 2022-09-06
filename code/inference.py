@@ -103,8 +103,12 @@ if __name__=='__main__':
     df['pres']=df['pres'].apply(lambda x:  '/app/public_test/prescription/image/'+x+'.png')
     df['pill']=df['pill'].apply(lambda arr: list(map(lambda x: '/app/public_test/pill/image/'+x+'.jpg',arr)))
 
+    print('{} prescription images\n{} pill images'.format(len(df['pres'].unique()),df['pill'].apply(lambda x: len(x)).sum()))
+    pbar = tqdm(total=df['pill'].apply(lambda x: len(x)).sum())
+
+    
     predict = pd.DataFrame()
-    for index,row in tqdm(df.iterrows(),total=len(df)):
+    for index,row in df.iterrows():
         pres_path = row['pres']
         pill_paths = row['pill']
         pill_names,ids=pres_process(pres_path)
@@ -118,6 +122,8 @@ if __name__=='__main__':
             temp = classification(pill_path,pill_ids)
             temp['image_name'] = pill_path.split('/')[-1]
             predict = pd.concat([predict,temp])
+            pbar.update(1)
+
     predict.drop(['class','name'], axis=1, inplace=True)
     predict.rename(columns={'confidence':'confidence_score',
                         'xmin':'x_min',
