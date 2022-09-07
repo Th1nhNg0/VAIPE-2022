@@ -26,7 +26,7 @@ Trong đó:
 Thêm flags `--gpus all` để sử dụng GPU.
 
 ```console
-docker run -d -it --shm-size=256m --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test -v {path_to_public_train}:/app/public_train ai4vn:latest
+docker run -d --ipc=host -it --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test -v {path_to_public_train}:/app/public_train ai4vn:latest
 ```
 
 Cấu trúc thư mục trong container sau khi khởi chạy thành công:

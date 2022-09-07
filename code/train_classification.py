@@ -12,7 +12,9 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import (Activation, BatchNormalization, Conv2D,
                                      Dense, Dropout, Flatten, Input,
                                      InputLayer, Lambda, MaxPooling2D,
-                                     concatenate,Model)
+                                     concatenate)
+from tensorflow.keras.models import Model
+
 from tqdm import tqdm
 
 image_width = 224
@@ -83,7 +85,7 @@ def vector_d(vector):
 
 
 if __name__ == '__main__':
-    data = pd.read_csv('combine_train.csv', index_col=0)
+    data = pd.read_csv('gen_train_data/combine_train.csv', index_col=0)
     data = data.sample(frac=1).reset_index(drop=True)
     (train_data, val_data) = train_test_split(data,
             test_size=split_size)
