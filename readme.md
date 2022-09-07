@@ -29,18 +29,11 @@ Thêm flags `--gpus all` để sử dụng GPU.
 docker run -d --ipc=host -it --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test -v {path_to_public_train}:/app/public_train ai4vn:latest
 ```
 
-Chạy file cài đặt môi trường python:
-
-```console
-docker exec -it ai4vn-AISIA-VAIPE-01 /app/env_setup.sh
-```
-
 Cấu trúc thư mục trong container sau khi khởi chạy thành công:
 
 ```console
 .
 |-- requirements.txt
-|-- env_setup.sh
 |-- pres_df.csv (sử dụng cho inference)
 |-- new_label.zip (sử dụng cho trainning)
 |-- code
