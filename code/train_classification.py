@@ -1,20 +1,10 @@
 import datetime
-import os
-import random
-from glob import glob
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import tensorflow as tf
-from PIL import Image
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import (Activation, BatchNormalization, Conv2D,
-                                     Dense, Dropout, Flatten, Input,
-                                     InputLayer, Lambda, MaxPooling2D,
-                                     concatenate)
+from tensorflow.keras.layers import Dense, Dropout, Input, concatenate
 from tensorflow.keras.models import Model
-
 from tqdm import tqdm
 
 image_width = 224
@@ -24,7 +14,9 @@ split_size = 0.05
 model_name = 'resnet50-bb-trainall' \
     + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
-data_augmentation =tf.keras.Sequential([tf.keras.layers.RandomContrast(0.2),
+data_augmentation =tf.keras.Sequential([
+                                tf.keras.layers.RandomZoom(0.2),
+                                tf.keras.layers.RandomContrast(0.2),
                                tf.keras.layers.RandomRotation(1)])
 
 

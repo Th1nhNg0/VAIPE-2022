@@ -37,6 +37,7 @@ Cấu trúc thư mục trong container sau khi khởi chạy thành công:
 |-- pres_df.csv (sử dụng cho inference)
 |-- new_label.zip (sử dụng cho trainning)
 |-- code
+|   |-- create_train_data.py
 |   |-- create_press_df.py
 |   |-- label_correct.py
 |   `-- inference.py
