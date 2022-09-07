@@ -5,8 +5,7 @@ FROM ubuntu:20.04
 RUN apt update
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y tzdata
 RUN apt install --no-install-recommends -y python3-pip git zip curl htop libgl1-mesa-glx libglib2.0-0 libpython3.8-dev
-RUN apt install -y wget
-RUN apt install -y tesseract-ocr
+RUN apt install -y wget tesseract-ocr unzip
 
 
 WORKDIR /app

@@ -14,7 +14,6 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 def CREATE_PRESS_DF():
-    print("RUNNING PRESS_DF DATA CREATION")
     files = glob('/app/public_train/prescription/label/*.json')
     pres_df = pd.DataFrame()
     for file in tqdm(files,desc='CREATING PRESS_DF DATA'):
@@ -29,7 +28,8 @@ def CREATE_PRESS_DF():
     pres_df.to_csv('/app/pres_df.csv')
 
 def process_img(i,file,valid_len,save_path_image_val,save_path_image_train,save_path_label_val,save_path_label_train):
-    img_path = file.replace('label', 'image').replace('.json', '.jpg')
+    basename = os.path.basename(file)
+    img_path = '/app/public_train/pill/image/'+basename.replace('.json', '.jpg')
     img = Image.open(img_path)
     try:
         img = ImageOps.exif_transpose(img)
@@ -56,18 +56,17 @@ def process_img(i,file,valid_len,save_path_image_val,save_path_image_train,save_
         h_ratio = h 
         # to 6 decimal places
         txt += '{} {:.6f} {:.6f} {:.6f} {:.6f}\n'.format(0,x_center, y_center, w_ratio, h_ratio)
-    base_name = os.path.basename(img_path)
     if i > valid_len:
-        img.save(save_path_image_train + base_name)
-        with open(save_path_label_train + base_name.replace('.jpg', '.txt'), 'w') as f:
+        img.save(save_path_image_train + basename.replace('.json', '.jpg'))
+        with open(save_path_label_train + basename.replace('.json', '.txt'), 'w') as f:
             f.write(txt)
     else:
-        img.save(save_path_image_val + base_name)
-        with open(save_path_label_val + base_name.replace('.jpg', '.txt'), 'w') as f:
+        img.save(save_path_image_val + basename.replace('.json', '.jpg'))
+        with open(save_path_label_val + basename.replace('.json', '.txt'), 'w') as f:
             f.write(txt)
 
 def YOLO_DATASET():
-    file_path = '/app/public_train/pill/label/*.json'
+    file_path = '/app/gen_train_data/new_label/*.json'
     save_dir='/app/gen_train_data/yolo_pill'
     split_ratio=0.1
     files = glob(file_path)
@@ -181,7 +180,6 @@ def single_pres(row,pres_df,save_dir):
     return result
 
 def CLASS_DATASET():
-    print("RUNNING CLASS TRAIN DATA CREATION")
     save_dir='/app/gen_train_data/image_crop'
     csv_path='/app/gen_train_data/combine_train.csv'
     
@@ -195,7 +193,7 @@ def CLASS_DATASET():
     ]
     result = []
     with Pool() as pool:
-        results = pool.starmap(single_pres, tqdm(jobs, total=len(jobs), desc="Creating classification train data"))
+        results = pool.starmap(single_pres, tqdm(jobs, total=len(jobs), desc="CREATING CLASSIFICATION TRAIN DATA"))
         for r in results:
             result.extend(r)
     final_df = pd.DataFrame(result, columns=['pill_path', 'vector','label'])

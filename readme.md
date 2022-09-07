@@ -11,7 +11,7 @@ Sử dụng [**resnet50**](https://www.tensorflow.org/api_docs/python/tf/keras/a
 # Câu lệnh tạo docker image:
 
 ```console
-$ docker build . -t "ai4vn"
+docker build . -t "ai4vn"
 ```
 
 # Chạy container đã tạo:
@@ -20,29 +20,39 @@ $ docker build . -t "ai4vn"
 
 Trong đó:
 
-    - `{path_to_public_train}` là đường dẫn tới public train.
-    - `{path_to_public_test}` là đường dẫn tới public test.
+- `{path_to_public_train}` là đường dẫn tới public train.
+- `{path_to_public_test}` là đường dẫn tới public test.
 
 Thêm flags `--gpus all` để sử dụng GPU.
 
 ```console
-$ docker run -d -it --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test -v {path_to_public_train}:/app/public_train ai4vn:latest
+docker run -d -it --shm-size=256m --gpus all --name ai4vn-AISIA-VAIPE-01 -v {path_to_public_test}:/app/public_test -v {path_to_public_train}:/app/public_train ai4vn:latest
 ```
 
 Cấu trúc thư mục trong container sau khi khởi chạy thành công:
 
 ```console
 .
+|-- requirements.txt
+|-- pres_df.csv (sử dụng cho inference)
+|-- new_label.zip (sử dụng cho trainning)
 |-- code
 |   |-- create_press_df.py
+|   |-- label_correct.py
 |   `-- inference.py
 |-- models
 |   |-- resnet50.h5
 |   `-- yolo.pt
-|-- pres_df.csv
-|-- requirements.txt
 |-- tessdata
 |   `-- eng.traineddata
+|-- public_train
+|   |-- pill_pres_map.json
+|   |-- pill
+|   |   |-- image
+|   |   `-- label
+|   `-- prescription
+|       |-- image
+|       `-- label
 |-- public_test
 |   |-- pill_pres_map.json
 |   |-- pill
@@ -52,10 +62,56 @@ Cấu trúc thư mục trong container sau khi khởi chạy thành công:
 `-- yolov5/
 ```
 
-## inference:
+## Trainning:
+
+### Chuẩn bị data:
+
+Theo các bước sau:
+
+1. Đánh lại bounding box bằng U2Net và contour detection. Folder `new_label`
+2. Tạo file csv chứa tên của các loại thuốc từ ảnh prescription -> `pres_df.csv`
+3. Sử dụng label ở bước 1 để tạo data cho yolov5. Folder `yolo_pill` sẽ được tạo ra.
+4. Cắt ảnh các viên thuốc riêng lẻ ra folder `image_crop` để train model classification.
+
+**Bước 1:** Chạy lệnh docker sau để đánh lại label, folder được lưu vào đường dẫn: `/app/gen_train_data/new_label/`
 
 ```console
-$ docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py
+docker exec -it ai4vn-AISIA-VAIPE-01 python3 code/label_correct.py
+```
+
+Tuy nhiên chạy đoạn code này chạy khá lâu, và thường xuyên xảy ra lỗi mạng trong lúc tải model. Nên có thể sử dụng file đã chạy từ trước: [new_label.zip](new_label.zip)
+
+```console
+docker exec -it ai4vn-AISIA-VAIPE-01 mkdir gen_train_data
+docker exec -it ai4vn-AISIA-VAIPE-01 unzip new_label.zip -d /app/gen_train_data/
+```
+
+**Bước 2,3,4:**
+
+```console
+docker exec -it ai4vn-AISIA-VAIPE-01 python3 code/create_train_data.py
+```
+
+### Train model yolov5
+
+```console
+docker exec -it ai4vn-AISIA-VAIPE-01 python3 yolov5/train.py --data pill.yaml --cfg yolov5x.yaml --img 640 --batch-size -1 --epochs 100 --name yolo_model_5x --project /app/models
+```
+
+Sau khi train xong model sẽ nằm ở đường dẫn: `/app/models/yolo_model_5x/weights/best.pt`
+
+### Train model classification
+
+```console
+docker exec -it ai4vn-AISIA-VAIPE-01 python3 code/train_classification.py
+```
+
+Sau khi train xong sẽ có ouput tên đường dẫn của model, thường sẽ nằm trong thư mục: `/app/models/`
+
+## Inference:
+
+```console
+docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py
 ```
 
 Mặc định code sẽ chạy 2 model pretrained từ trước được tải từ drive. Có thể sử dụng 2 flag sau cho 2 model khác:
@@ -64,24 +120,7 @@ Mặc định code sẽ chạy 2 model pretrained từ trước được tải t
 - `--class_model {path}`: đường dẫn tới model classification
 
 ```console
-$ docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py --yolo_model /app/models/yolo.pt --class_model /app/models/resnet50.h5
-```
-
-Sau khi chạy xong kết quả sẽ ở `/app/results.csv`
-
-### Run Train:
-
-```console
-$ docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py
-```
-
-Mặc định code sẽ chạy 2 model pretrained từ trước được tải từ drive. Có thể sử dụng 2 flag sau cho 2 model khác:
-
-- `--yolo_model {path}`: đường dẫn tới model yolov5 object detection
-- `--class_model {path}`: đường dẫn tới model classification
-
-```console
-$ docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py --yolo_model /app/models/yolo.pt --class_model /app/models/resnet50.h5
+docker exec -it  ai4vn-AISIA-VAIPE-01 python3 code/inference.py --yolo_model /app/models/yolo.pt --class_model /app/models/resnet50.h5
 ```
 
 Sau khi chạy xong kết quả sẽ ở `/app/results.csv`

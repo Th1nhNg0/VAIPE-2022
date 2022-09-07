@@ -3,7 +3,8 @@
 # VAIPE
 pytesseract>=0.3.10
 gdown>=4.5.1
-
+paddlehub>=2.3.0
+paddlepaddle>=2.3.2
 
 # YOLOv5 requirements
 # Base ----------------------------------------
