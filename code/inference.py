@@ -12,7 +12,7 @@ from PIL import ImageFile
 import torch
 import tensorflow as tf
 import argparse
-
+import json
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 IMAGE_WIDTH = 224
 IMAGE_HEIGHT = 224
@@ -98,10 +98,18 @@ if __name__=='__main__':
     class_model = tf.keras.models.load_model(class_model_path)
     print("✅ LOADING CLASSIFICATION MODEL DONE")
 
-    path = '/app/public_test/pill_pres_map.json'
-    df = pd.read_json(path)
-    df['pres']=df['pres'].apply(lambda x:  '/app/public_test/prescription/image/'+x+'.png')
-    df['pill']=df['pill'].apply(lambda arr: list(map(lambda x: '/app/public_test/pill/image/'+x+'.jpg',arr)))
+ 
+    f = open('/app/public_test/pill_pres_map.json', 'r')
+    data = json.load(f)
+    result = []
+    for key in data:
+        pres = key+'.png'
+        pill = data[key]
+        result.append([pres,pill])
+
+    df = pd.DataFrame(result,columns =['pres','pill'])
+    df['pres']=df['pres'].apply(lambda x:  '/app/public_test/prescription/image/'+x)
+    df['pill']=df['pill'].apply(lambda arr: list(map(lambda x: '/app/public_test/pill/image/'+x,arr)))
 
     print('{} prescription images\n{} pill images'.format(len(df['pres'].unique()),df['pill'].apply(lambda x: len(x)).sum()))
     pbar = tqdm(total=df['pill'].apply(lambda x: len(x)).sum())

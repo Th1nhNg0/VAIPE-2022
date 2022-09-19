@@ -63,6 +63,35 @@ Cấu trúc thư mục trong container sau khi khởi chạy thành công:
 `-- yolov5/
 ```
 
+Cấu trúc file `pill_pres_map.json` trong folder test có dạng:
+
+```json
+{
+    "20220314_201448870519": [
+        "IMG_20220831_160853.jpg",
+        "IMG_20220831_160909.jpg",
+        "IMG_20220831_160858.jpg",
+        "IMG_20220831_160900.jpg",
+        "IMG_20220831_160855.jpg"
+    ],
+    "20220304_133947832691": [
+        "94de26d1a14f64113d5e.jpg",
+        "06c620cba755620b3b44.jpg",
+        "5abc54cad354160a4f45.jpg",
+        "ade1fee87976bc28e567.jpg",
+        "e42f892c0eb2cbec92a3.jpg"
+    ],
+    "20220110_214018763730": [
+        "IMG_9110.JPG",
+        "IMG_9112.JPG",
+        "IMG_9113.JPG",
+        "IMG_9111.JPG",
+        "IMG_9109.JPG"
+    ],
+    ...
+}
+```
+
 ## Trainning:
 
 ### Chuẩn bị data:
