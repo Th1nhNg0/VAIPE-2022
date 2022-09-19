@@ -1,3 +1,5 @@
+![Untitled Diagram](https://user-images.githubusercontent.com/26407823/189125230-054bd435-1db2-42dd-889c-6a1cab53066e.png)
+
 # Các thư viện sử dụng:
 
 Sử dụng [**tesseract-ocr**](https://github.com/tesseract-ocr/tesseract) để lấy chữ từ ảnh pres
